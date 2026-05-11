@@ -62,6 +62,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	});
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+	var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+	db.Database.Migrate();
+}
 app.UseStaticFiles();
 // KÍCH HOẠT CORS - Lệnh này bắt buộc phải nằm TRƯỚC xác thực bảo mật
 app.UseCors("AllowReactApp");
