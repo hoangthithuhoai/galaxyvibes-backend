@@ -1,0 +1,20 @@
+@Galaxyvibes_HostAddress = https://localhost:7011
+
+### 1. Xem danh sách các vì sao (Lúc đầu sẽ rỗng)
+GET {{Galaxyvibes_HostAddress}}/api/stars
+Accept: application/json
+
+###
+
+### 2. Phóng ngôi sao đầu tiên lên vũ trụ
+POST {{Galaxyvibes_HostAddress}}/api/stars
+Content-Type: application/json
+
+{
+  "content": "Trời hôm nay thật đẹp, đây là ngôi sao đầu tiên của dự án Thought Galaxy!",
+  "sentimentColor": "#60A5FA",
+  "size": 2,
+  "positionX": 15.5,
+  "positionY": 20.0,
+  "positionZ": -5.2
+}

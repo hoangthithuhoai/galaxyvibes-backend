@@ -1,0 +1,13 @@
+# .NET Build Artifacts
+bin/
+obj/
+
+# Database file (Render sẽ tự tạo)
+*.db
+
+# User-specific files
+*.user
+.vs/
+
+# NuGet packages
+*.nupkg
