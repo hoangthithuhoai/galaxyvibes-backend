@@ -16,7 +16,6 @@ builder.Services.AddCors(options =>
 	options.AddPolicy("AllowReactApp",
 		policy =>
 		{
-			// Thay vì chỉ fix cứng localhost:5173, ta mở luôn cho tiện test App điện thoại
 			policy.AllowAnyOrigin()
 				  .AllowAnyHeader()
 				  .AllowAnyMethod();
@@ -24,10 +23,12 @@ builder.Services.AddCors(options =>
 });
 
 // ==========================================
-// 2. CẤU HÌNH DATABASE
+// 2. CẤU HÌNH DATABASE (Supabase PostgreSQL)
 // ==========================================
+var connectionString = "Host=aws-0-ap-southeast-1.pooler.supabase.co;Port=6543;Database=postgres;Username=postgres.fyzobyyrirowaklfzilg;Password=Matkhaucuahoai;SSL Mode=Require;Trust Server Certificate=true";
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
+	options.UseNpgsql(connectionString)
 );
 
 // ==========================================
@@ -36,7 +37,7 @@ options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
 	options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-	options.JsonSerializerOptions.PropertyNameCaseInsensitive = true; // ← Thêm dòng này
+	options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -44,7 +45,6 @@ builder.Services.AddSwaggerGen();
 // ==========================================
 // 4. CẤU HÌNH BẢO MẬT JWT (CẤP THẺ BÀI)
 // ==========================================
-// Các thông số này được lấy khớp chính xác với AuthController của bạn
 var secretKey = "Chuoi_Bi_Mat_Cuc_Ky_Dai_Va_An_Toan_123!";
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	.AddJwtBearer(options =>
@@ -62,39 +62,32 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	});
 
 var app = builder.Build();
+
+// ==========================================
+// 5. TỰ ĐỘNG MIGRATE DATABASE KHI KHỞI ĐỘNG
+// ==========================================
 using (var scope = app.Services.CreateScope())
 {
 	var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-	db.Database.Migrate();
+	db.Database.Migrate(); // Tự động tạo bảng nếu chưa có
 }
+
 app.UseStaticFiles();
-// KÍCH HOẠT CORS - Lệnh này bắt buộc phải nằm TRƯỚC xác thực bảo mật
 app.UseCors("AllowReactApp");
 
-// ==========================================
-// 5. CẤU HÌNH ĐƯỜNG ỐNG XỬ LÝ (PIPELINE)
-// ==========================================
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
-
-// KÍCH HOẠT XÁC THỰC VÀ BẢO MẬT
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseStaticFiles(); // Cho phép truy cập các file trong thư mục wwwroot
-
-using (var scope = app.Services.CreateScope())
-{
-	var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-	db.Database.EnsureCreated(); // đảm bảo bảng được tạo nếu chưa có
-}
+app.UseStaticFiles();
 
 app.Run();

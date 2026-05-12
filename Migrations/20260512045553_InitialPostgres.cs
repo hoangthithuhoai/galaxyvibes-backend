@@ -1,12 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace Galaxyvibes.API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialPostgres : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,14 +16,14 @@ namespace Galaxyvibes.API.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Username = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Password = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
-                    AvatarUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    Role = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Password = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    AvatarUrl = table.Column<string>(type: "text", nullable: true),
+                    Role = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -33,10 +34,10 @@ namespace Galaxyvibes.API.Migrations
                 name: "Follows",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FollowerId = table.Column<int>(type: "INTEGER", nullable: false),
-                    FollowingId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FollowerId = table.Column<int>(type: "integer", nullable: false),
+                    FollowingId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -59,19 +60,19 @@ namespace Galaxyvibes.API.Migrations
                 name: "Stars",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    LikeCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    CommentCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    ImageUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    Content = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
-                    SentimentColor = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
-                    Size = table.Column<int>(type: "INTEGER", nullable: false),
-                    PositionX = table.Column<float>(type: "REAL", nullable: false),
-                    PositionY = table.Column<float>(type: "REAL", nullable: false),
-                    PositionZ = table.Column<float>(type: "REAL", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    LikeCount = table.Column<int>(type: "integer", nullable: false),
+                    CommentCount = table.Column<int>(type: "integer", nullable: false),
+                    ImageUrl = table.Column<string>(type: "text", nullable: true),
+                    Content = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    SentimentColor = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Size = table.Column<int>(type: "integer", nullable: false),
+                    PositionX = table.Column<float>(type: "real", nullable: false),
+                    PositionY = table.Column<float>(type: "real", nullable: false),
+                    PositionZ = table.Column<float>(type: "real", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -88,12 +89,12 @@ namespace Galaxyvibes.API.Migrations
                 name: "Comments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Content = table.Column<string>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    StarId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Content = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    StarId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -116,10 +117,10 @@ namespace Galaxyvibes.API.Migrations
                 name: "Likes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    StarId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    StarId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -142,15 +143,15 @@ namespace Galaxyvibes.API.Migrations
                 name: "Notifications",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ActorId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Type = table.Column<string>(type: "TEXT", nullable: false),
-                    StarId = table.Column<int>(type: "INTEGER", nullable: true),
-                    Message = table.Column<string>(type: "TEXT", nullable: false),
-                    IsRead = table.Column<bool>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    ActorId = table.Column<int>(type: "integer", nullable: false),
+                    Type = table.Column<string>(type: "text", nullable: false),
+                    StarId = table.Column<int>(type: "integer", nullable: true),
+                    Message = table.Column<string>(type: "text", nullable: false),
+                    IsRead = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -178,11 +179,11 @@ namespace Galaxyvibes.API.Migrations
                 name: "SavedStars",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    StarId = table.Column<int>(type: "INTEGER", nullable: false),
-                    SavedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    StarId = table.Column<int>(type: "integer", nullable: false),
+                    SavedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
