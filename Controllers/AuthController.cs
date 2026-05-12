@@ -29,6 +29,16 @@ namespace Galaxyvibes.API.Controllers
 		{
 			return Ok(new { message = "Backend đang chạy!" });
 		}
+		[HttpGet("debug/download-db")]
+		public IActionResult DownloadDatabase()
+		{
+			var filePath = Path.Combine(Directory.GetCurrentDirectory(), "galaxyvibes.db");
+			if (!System.IO.File.Exists(filePath))
+				return NotFound("Database file not found.");
+
+			var bytes = System.IO.File.ReadAllBytes(filePath);
+			return File(bytes, "application/octet-stream", "galaxyvibes.db");
+		}
 
 		// 1. Đăng ký
 		[HttpPost("register")]
