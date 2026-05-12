@@ -30,6 +30,31 @@ namespace Galaxyvibes.API.Controllers
 			return Ok(new { message = "Backend đang chạy!" });
 		}
 
+		[AllowAnonymous]
+		[HttpGet("list-users")]
+		public IActionResult ListUsers()
+		{
+			var users = _context.Users
+				.Select(u => new { u.Id, u.Username, u.Email, u.CreatedAt })
+				.ToList();
+			return Ok(users);
+		}
+
+		[AllowAnonymous]
+		[HttpPost("upload-db")]
+		public async Task<IActionResult> UploadDatabase(IFormFile file)
+		{
+			if (file == null || file.Length == 0)
+				return BadRequest(new { message = "File không hợp lệ" });
+
+			var filePath = Path.Combine(Directory.GetCurrentDirectory(), "galaxyvibes.db");
+			using (var stream = new FileStream(filePath, FileMode.Create))
+			{
+				await file.CopyToAsync(stream);
+			}
+			return Ok(new { message = "Upload database thành công" });
+		}
+
 		// 1. Đăng ký
 		[HttpPost("register")]
 		public async Task<IActionResult> Register([FromBody] RegisterRequest request)

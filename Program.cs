@@ -91,4 +91,10 @@ app.MapControllers();
 
 app.UseStaticFiles(); // Cho phép truy cập các file trong thư mục wwwroot
 
+using (var scope = app.Services.CreateScope())
+{
+	var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+	db.Database.EnsureCreated(); // đảm bảo bảng được tạo nếu chưa có
+}
+
 app.Run();
